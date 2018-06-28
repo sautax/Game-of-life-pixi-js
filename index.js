@@ -1,6 +1,15 @@
-"use strict";
-let canvas = document.getElementById('canvas');
-let ctx = canvas.getContext("2d");
+// let canvas = document.getElementById('canvas');
+// let ctx = canvas.getContext("2d");
+let app = new PIXI.Application({
+    width: 800,
+    height: 600
+});
+document.body.appendChild(app.view);
+
+app.renderer.backgroundColor = 0x000000;
+app.renderer.autoResize = true;
+
+let stage = app.stage
 let WIDTH = 92;
 let HEIGHT = 47;
 let p = 0.8;
@@ -16,11 +25,12 @@ let WidthValue = document.getElementById("WidthValue");
 let HeightValue = document.getElementById("HeightValue");
 let ProbabilityValue = document.getElementById("ProbabilityValue");
 let StepsValue = document.getElementById("StepsValue");
-canvas.width = WIDTH * scale;
-canvas.height = HEIGHT * scale;
+app.renderer.resize(WIDTH*scale, HEIGHT*scale);
 class grid {
     constructor(w, h) {
-        this.grid = [[]];
+        this.grid = [
+            []
+        ];
         let line = [];
         let i = true;
         this.w = w;
@@ -42,18 +52,29 @@ class grid {
         //     line = []
         // }
     }
-    show(ctx) {
+    show() {
         for (let x = 0; x < this.w; x++) {
             for (let y = 0; y < this.h; y++) {
-                ctx.beginPath();
-                ctx.rect(x * scale, y * scale, scale, scale);
-                ctx.fillStyle = "white";
+                let  graphics = new PIXI.Graphics();
+                let color = 0x010101
                 if (this.grid[x][y])
-                    ctx.fillStyle = "black";
-                ctx.fill();
-                ctx.strokeStyle = "grey";
-                ctx.stroke();
-                ctx.closePath();
+                    color = 0xFFFFFF;
+                graphics.beginFill(color);
+                graphics.lineStyle(1, 0x101010);
+                graphics.drawRect(x, y, this.w, this.h);
+                stage.addChild(graphics);
+
+
+
+                // ctx.beginPath();
+                // ctx.rect(x * scale, y * scale, scale, scale);
+                // ctx.fillStyle = "white";
+                // if (this.grid[x][y])
+                //     ctx.fillStyle = "black";
+                // ctx.fill();
+                // ctx.strokeStyle = "grey";
+                // ctx.stroke();
+                // ctx.closePath();
             }
         }
     }
@@ -74,8 +95,7 @@ class grid {
                         t = false;
                     if (n < 2)
                         t = false;
-                }
-                else {
+                } else {
                     t = false;
                     if (n === 3)
                         t = true;
@@ -132,8 +152,7 @@ addEventListener("mousedown", function (e) {
     let y = Math.floor(e.layerY / scale) - 1;
     if (cells.grid[x][y]) {
         cells.grid[x][y] = false;
-    }
-    else {
+    } else {
         cells.grid[x][y] = true;
     }
 });
@@ -156,15 +175,14 @@ addEventListener("mouseup", function (e) {
     //     cells.grid[x][y] = true
     // }
 });
-canvas.addEventListener("mousemove", function (e) {
+addEventListener("mousemove", function (e) {
     let x = Math.floor(e.layerX / scale);
     let y = Math.floor(e.layerY / scale) - 1;
     if (x !== mX || y !== mY) {
         if (tracing) {
             if (cells.grid[x][y]) {
                 cells.grid[x][y] = false;
-            }
-            else {
+            } else {
                 cells.grid[x][y] = true;
             }
         }
@@ -176,8 +194,7 @@ addEventListener("keypress", function (e) {
     if (e.key === " " || e.key === "p") {
         if (play) {
             play = false;
-        }
-        else {
+        } else {
             play = true;
         }
     }
@@ -199,7 +216,9 @@ addEventListener("keypress", function (e) {
         }
     }
     if (e.key === "c") {
-        cells.grid = [[]];
+        cells.grid = [
+            []
+        ];
         let line = [];
         let i = true;
         let w = cells.w;
@@ -224,6 +243,7 @@ addEventListener("keypress", function (e) {
         StepsValue.value = steps.toString();
     }
 });
+
 function validateOptions() {
     canvas.style.display = "block";
     let optionsDiv = document.getElementById("options");
@@ -233,12 +253,13 @@ function validateOptions() {
     HEIGHT = parseInt(HeightValue.value);
     p = parseFloat(ProbabilityValue.value);
     steps = parseInt(StepsValue.value);
-    canvas.width = WIDTH * scale;
-    canvas.height = HEIGHT * scale;
+    app.renderer.resize(WIDTH*scale, HEIGHT*scale);
     cells.w = WIDTH;
     cells.h = HEIGHT;
     // clear the grid to the right format
-    cells.grid = [[]];
+    cells.grid = [
+        []
+    ];
     let line = [];
     let i = true;
     let w = cells.w;
@@ -252,9 +273,10 @@ function validateOptions() {
     }
 }
 let f = 0;
+
 function draw() {
     if (show)
-        cells.show(ctx);
+        cells.show();
     requestAnimationFrame(draw);
     f += 1;
     if (f >= steps) {

@@ -28,8 +28,9 @@
             background: white;
 
         }
-        #submitB{
-            margin-left : 95px;
+
+        #submitB {
+            margin-left: 95px;
             width: 100px;
         }
 
@@ -43,7 +44,7 @@
 
 <body>
     <p>P/space : play/pause | Click : toggle cell | R : randomize grid | C : clear grid | O : options</p>
-    <canvas id="canvas" width="800" height="600"></canvas>
+    <!-- <canvas id="canvas" width="800" height="600"></canvas> -->
 
     <!-- options -->
     <div id="options" style="display: none;">
@@ -64,7 +65,7 @@
                 <input type="number" name="probability" id="ProbabilityValue" value="0.01" step="0.01">
                 <br>
                 <label for="StepsValue">Frameskip</label>
-                <input type="number" name="steps" id="StepsValue" value="1" >
+                <input type="number" name="steps" id="StepsValue" value="1">
                 <br>
                 <button type="button" id="submitB" onclick="validateOptions();">submit</button>
             </form>
@@ -74,7 +75,8 @@
     </div>
 
 </body>
-
+<script src="https://pixijs.download/v4.8.1/pixi.min.js"></script>
 <script src="./index.js"></script>
+
 
 </html>
